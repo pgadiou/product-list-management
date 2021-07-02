@@ -2,7 +2,6 @@ const express = require('express');
 const { PermissionMiddlewareCreator } = require('forest-express-sequelize');
 const { productListings } = require('../models');
 
-
 const router = express.Router();
 const permissionMiddlewareCreator = new PermissionMiddlewareCreator('productListings');
 
