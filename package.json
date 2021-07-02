@@ -13,11 +13,13 @@
     "csv-parse": "^4.16.0",
     "debug": "~4.0.1",
     "dotenv": "~6.1.0",
+    "easyinvoice": "^1.0.144",
     "express": "~4.17.1",
     "express-jwt": "6.0.0",
     "forest-express-sequelize": "^7.0.0",
     "morgan": "1.9.1",
     "mysql2": "~2.2.5",
+    "pdfmake": "^0.1.71",
     "require-all": "^3.0.0",
     "sequelize": "~5.15.1"
   }

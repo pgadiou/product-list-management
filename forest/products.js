@@ -1,7 +1,10 @@
 const { collection } = require('forest-express-sequelize');
 
 collection('products', {
-  actions: [],
+  actions: [{
+    name: 'download pdf',
+    download: true,
+  }],
   fields: [{
     field: 'image list',
     type: ['String'],

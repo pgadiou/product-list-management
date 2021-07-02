@@ -1,6 +1,7 @@
 const express = require('express');
 const { PermissionMiddlewareCreator } = require('forest-express-sequelize');
 const { productListings } = require('../models');
+const pdfMake = require('pdfmake')
 
 
 const router = express.Router();
@@ -11,6 +12,10 @@ function getCSVfromBase64(rawFile) {
   const buff = new Buffer(rawFileCleaned, 'base64');
   return buff.toString('ascii');
 }
+
+
+
+
 
 router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
   const recordId = request.body.data.attributes.ids[0]
