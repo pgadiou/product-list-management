@@ -15,3 +15,9 @@ The action transforms the file stored as a base64 string into an ASCII string an
 You can find the declaration of the action "upload reviewed csv" in the forest/product_listings.js file and the implementation of the action's logic in the routes/product_listing.js file.
 
 The action stores the file added by the user in the input form in the database and updates the status of the record. You can add in the action's implementation any logic to forward the file to a custom service before saving it.
+
+## Adding smart action to download an example PDF invoice from product list
+
+You can find the declaration of the action "download csv" in the forest/products.js file and the implementation of the action's logic in the routes/products.js file.
+
+Here is a quick preview of the action [in video](https://www.loom.com/share/9f248bb26eea4aaba9a0c0c4e810f5e9)
