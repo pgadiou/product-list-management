@@ -74,6 +74,21 @@
         "value": null
       }]
     }, {
+      "field": "fileName",
+      "type": "String",
+      "defaultValue": null,
+      "enums": null,
+      "integration": null,
+      "isFilterable": false,
+      "isPrimaryKey": false,
+      "isReadOnly": true,
+      "isRequired": false,
+      "isSortable": false,
+      "isVirtual": true,
+      "reference": null,
+      "inverseOf": null,
+      "validations": []
+    }, {
       "field": "id",
       "type": "Number",
       "defaultValue": null,
@@ -140,6 +155,19 @@
     }],
     "segments": [],
     "actions": [{
+      "name": "change status",
+      "type": "bulk",
+      "baseUrl": null,
+      "endpoint": "/forest/actions/change-status",
+      "httpMethod": "POST",
+      "redirect": null,
+      "download": false,
+      "fields": [],
+      "hooks": {
+        "load": false,
+        "change": []
+      }
+    }, {
       "name": "download csv",
       "type": "single",
       "baseUrl": null,
@@ -217,6 +245,21 @@
       "inverseOf": null,
       "validations": []
     }, {
+      "field": "image list html",
+      "type": "String",
+      "defaultValue": null,
+      "enums": null,
+      "integration": null,
+      "isFilterable": false,
+      "isPrimaryKey": false,
+      "isReadOnly": true,
+      "isRequired": false,
+      "isSortable": false,
+      "isVirtual": true,
+      "reference": null,
+      "inverseOf": null,
+      "validations": []
+    }, {
       "field": "images",
       "type": "String",
       "defaultValue": null,
@@ -249,6 +292,21 @@
     }, {
       "field": "price",
       "type": "Number",
+      "defaultValue": null,
+      "enums": null,
+      "integration": null,
+      "isFilterable": true,
+      "isPrimaryKey": false,
+      "isReadOnly": false,
+      "isRequired": false,
+      "isSortable": true,
+      "isVirtual": false,
+      "reference": null,
+      "inverseOf": null,
+      "validations": []
+    }, {
+      "field": "priceList",
+      "type": "String",
       "defaultValue": null,
       "enums": null,
       "integration": null,
@@ -353,7 +411,7 @@
   }],
   "meta": {
     "liana": "forest-express-sequelize",
-    "liana_version": "7.11.2",
+    "liana_version": "8.0.0",
     "stack": {
       "database_type": "mysql",
       "engine": "nodejs",

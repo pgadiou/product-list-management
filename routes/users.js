@@ -15,6 +15,13 @@ router.post('/users', permissionMiddlewareCreator.create(), (request, response, 
   next();
 });
 
+// router.post('/actions/suspend-user', permissionMiddlewareCreator.smartAction(), (request, response) => {
+//   const user = request.user;
+//   console.log(user);
+//   const { reason } = request.body.data.attributes.values;
+//   response.send({ success: `selected records ${request.body.data.attributes.ids[0]} for reason ${reason}` })
+// })
+
 // Update a User
 router.put('/users/:recordId', permissionMiddlewareCreator.update(), (request, response, next) => {
   // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#update-a-record

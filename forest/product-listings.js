@@ -12,6 +12,8 @@ collection('productListings', {
     type: 'single',
     download: true,
   },{
+    name: 'change status',
+  },{
     name: 'upload reviewed csv',
     type: 'single',
     fields: [{
@@ -25,6 +27,10 @@ collection('productListings', {
     type: 'String',
     reference: 'users',
     get: (record) => users.findOne({ where: { email: record.createdBy }}).then((user) => user).catch((e) => null)
+  }, {
+    field: 'fileName',
+    type: 'String',
+    get: (record) => record.file.match(/name=(.*)\;/) ? decodeURIComponent(record.file.match(/name=(.*)\;/)[1]) : null,
   }],
   segments: [],
   searchFields: ['createdBy'],

@@ -69,8 +69,6 @@ router.post('/actions/download-pdf', permissionMiddlewareCreator.smartAction(), 
 });
 
 
-
-
 // Create a Product
 router.post('/products', permissionMiddlewareCreator.create(), (request, response, next) => {
   // Learn what this route does here: https://docs.forestadmin.com/documentation/v/v6/reference-guide/routes/default-routes#create-a-record

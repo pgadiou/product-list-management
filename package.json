@@ -16,9 +16,11 @@
     "easyinvoice": "^1.0.144",
     "express": "~4.17.1",
     "express-jwt": "6.0.0",
-    "forest-express-sequelize": "^7.0.0",
+    "file-type": "^16.5.1",
+    "forest-express-sequelize": "^8.0.0",
     "morgan": "1.9.1",
     "mysql2": "~2.2.5",
+    "parse-data-uri": "^0.2.0",
     "pdfmake": "^0.1.71",
     "require-all": "^3.0.0",
     "sequelize": "~5.15.1"

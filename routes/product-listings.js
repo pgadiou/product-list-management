@@ -1,37 +1,92 @@
 const express = require('express');
+const parseDataUri = require('parse-data-uri')
+
 const { PermissionMiddlewareCreator } = require('forest-express-sequelize');
 const { productListings } = require('../models');
 
 const router = express.Router();
 const permissionMiddlewareCreator = new PermissionMiddlewareCreator('productListings');
 
-function getCSVfromBase64(rawFile) {
-  const rawFileCleaned = rawFile.replace('data:text/csv;base64', '');
-  const buff = new Buffer(rawFileCleaned, 'base64');
-  return buff.toString('ascii');
-}
+// router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
+//   const recordId = request.body.data.attributes.ids[0]
+//   response.setHeader('Content-Type', 'text/csv');
+//   response.setHeader('Content-Disposition', `attachment; filename=list-${recordId}-download.csv`);
+//   response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
 
-router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
-  const recordId = request.body.data.attributes.ids[0]
-  response.setHeader('Content-Type', 'text/csv');
-  response.setHeader('Content-Disposition', `attachment; filename=list-${recordId}-download.csv`);
-  response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+//   return productListings.findByPk(recordId)
+//     .then((record) => {
+//       const csv = getCSVfromBase64(record.file);
+//       record.status = 2;
+//       return record.save().then(() => response.send(csv))
+//     })
+//     .catch((e) => response.status(400).send({error: `Cannot download file: ${e.message}`}))
+// });
 
-  return productListings.findByPk(recordId)
-    .then((record) => {
-      const csv = getCSVfromBase64(record.file);
-      record.status = 2;
-      return record.save().then(() => response.send(csv))
-    })
-    .catch((e) => response.status(400).send({error: `Cannot download file: ${e.message}`}))
+router.post('/actions/change-status', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
+  const recordIds = request.body.data.attributes.ids;
+  return productListings.update({
+    status: 'approved',
+    updatedAt: Date.now(),
+  }, { where: { id: recordIds } })
+    .then(() => response.send({ success: 'Successfully enabled!' }))
+    .catch((error) => response.status(400).send({ error: error.message }));
 });
 
-router.post('/actions/upload-reviewed-csv', permissionMiddlewareCreator.smartAction(), (request, response) => {
+//NEJREE VERSION
+router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
+  const recordId = request.body.data.attributes.ids[0]
+  return productListings.findByPk(recordId)
+    .then((record) => {
+      const file = record.file;
+      const fileName = record.file.match(/name=(.*)\;/) ? record.file.match(/name=(.*)\;/)[1] : `file-${recordId}-download.csv`
+      const parsed = parseDataUri(record.file);
+      response.setHeader('Content-Type', parsed.mimeType);
+      response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+      response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+      return response.send(parsed.data)
+    })
+    .catch((e) => {
+      console.log(e)
+      response.status(400).send({error: `Cannot download file: ${e.message}`})
+    })
+});
+
+// router.post('/actions/Download-products-file', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
+//   const recordId = request.body.data.attributes.ids[0]
+//   return productFile.findByPk(recordId)
+//     .then((record) => {
+//       if (record.category == "product_images") {
+//         return response.status(400).send({error: 'Sorry You can download products sheet only'});
+//       }
+//       const file = record.content;
+//       // get the file name if included in the base64 string or generate generic name
+//       const fileName = record.file.match(/name=(.*)\;/) ? record.file.match(/name=(.*)\;/)[1] : `file-${recordId}-download.csv`
+//       const parsed = parseDataUri(record.content);
+//       response.setHeader('Content-Type',  parsed.mimeType);
+//       response.setHeader('Content-Disposition', `attachment; filename=list-${fileName}`);
+//       response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+//       return response.send(csv)
+//     })
+//     .catch((e) => {
+//       console.log(e.message);
+//       response.status(400).send({error: `Cannot download file: ${e.message}`})})
+// });
+
+router.post('/actions/upload-reviewed-csv', permissionMiddlewareCreator.smartAction(), async (request, response) => {
   const recordId = request.body.data.attributes.ids[0];
   const { file } = request.body.data.attributes.values;
+  console.log(request.body.data.attributes.values);
+
+  const fileName = file.match(/name=(.*)\./)[1];
+  const prefixMime = file.match(/\/(.*?);/)[1];
+  const extension = file.match(/\.(.*?);/)[1];
+
+  if ((prefixMime !== 'csv') && (extension !== 'csv')) {
+    response.status(400).send({ error: 'please upload only csv file' });
+  }
 
   //start - add the api call to your own service here if you wish to process the csv
-  const csv = getCSVfromBase64(file);
+  //myApiCall(file, fileName)
   //end
 
   return productListings.findByPk(recordId)
@@ -41,8 +96,8 @@ router.post('/actions/upload-reviewed-csv', permissionMiddlewareCreator.smartAct
       record.reviewedBy = request.user.email;
       return record.save();
     })
-    .then(() => response.send({ success: 'file successfully uploaded'}))
-    .catch((e) => response.status(400).send({error: `Cannot upload file: ${e.message}`}));
+    .then(() => response.send({ success: `file ${fileName} successfully uploaded` }))
+    .catch((e) => response.status(400).send({ error: `Cannot upload file: ${e.message}` }));
 });
 
 

@@ -6,7 +6,32 @@ const { collection } = require('forest-express-sequelize');
 // - Smart relationships: https://docs.forestadmin.com/documentation/reference-guide/relationships/create-a-smart-relationship
 // - Smart segments: https://docs.forestadmin.com/documentation/reference-guide/segments/smart-segments
 collection('users', {
-  actions: [],
+  // actions: [{
+  //   name: 'suspend user',
+  //   type: 'single',
+  //   fields: [{
+  //     field: 'reason',
+  //     type: 'String'
+  //   }],
+  //   hooks: {
+  //     load: async ({ fields, request }) => {
+  //       const reason = fields.find(field => field.field === 'reason');
+
+  //       reason.value = 'unruly';
+
+  //       return fields;
+  //     },
+  //     change: {
+  //       onFieldChanged: ({ fields, request, reason }) => {
+  //         fields.push({
+  //           field: 'another field',
+  //           type: 'Boolean',
+  //         });
+  //         return fields;
+  //       }
+  //     }
+  //   },
+  // }],
   fields: [],
   segments: [],
 });
