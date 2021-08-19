@@ -7,21 +7,6 @@ const { productListings } = require('../models');
 const router = express.Router();
 const permissionMiddlewareCreator = new PermissionMiddlewareCreator('productListings');
 
-// router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
-//   const recordId = request.body.data.attributes.ids[0]
-//   response.setHeader('Content-Type', 'text/csv');
-//   response.setHeader('Content-Disposition', `attachment; filename=list-${recordId}-download.csv`);
-//   response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
-
-//   return productListings.findByPk(recordId)
-//     .then((record) => {
-//       const csv = getCSVfromBase64(record.file);
-//       record.status = 2;
-//       return record.save().then(() => response.send(csv))
-//     })
-//     .catch((e) => response.status(400).send({error: `Cannot download file: ${e.message}`}))
-// });
-
 router.post('/actions/change-status', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
   const recordIds = request.body.data.attributes.ids;
   return productListings.update({
@@ -32,23 +17,23 @@ router.post('/actions/change-status', permissionMiddlewareCreator.smartAction(),
     .catch((error) => response.status(400).send({ error: error.message }));
 });
 
-//NEJREE VERSION
 router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
-  const recordId = request.body.data.attributes.ids[0]
+  const recordId = request.body.data.attributes.ids[0];
   return productListings.findByPk(recordId)
     .then((record) => {
-      const file = record.file;
-      const fileName = record.file.match(/name=(.*)\;/) ? record.file.match(/name=(.*)\;/)[1] : `file-${recordId}-download.csv`
-      const parsed = parseDataUri(record.file);
+      const { file } = record;
+      const fileName = file.match(/name=(.*)\;/) ? file.match(/name=(.*)\;/)[1] : `file-${recordId}-download.csv`;
+      const parsed = parseDataUri(file);
       response.setHeader('Content-Type', parsed.mimeType);
       response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
-      return response.send(parsed.data)
+      record.status = 2;
+      return record.save().then(() => response.send(parsed.data));
     })
     .catch((e) => {
-      console.log(e)
-      response.status(400).send({error: `Cannot download file: ${e.message}`})
-    })
+      console.log(e);
+      response.status(400).send({ error: `Cannot download file: ${e.message}` });
+    });
 });
 
 // router.post('/actions/Download-products-file', permissionMiddlewareCreator.smartAction(), (request, response, next) => {
