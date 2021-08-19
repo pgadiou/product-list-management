@@ -27,7 +27,7 @@ router.post('/actions/download-csv', permissionMiddlewareCreator.smartAction(), 
       response.setHeader('Content-Type', parsed.mimeType);
       response.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
       response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
-      record.status = 2;
+      if (record.status === 1) { record.status = 2 }
       return record.save().then(() => response.send(parsed.data));
     })
     .catch((e) => {
